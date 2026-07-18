@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Run the focused writings test suite.
+set -euo pipefail
+. "$(dirname "$0")/_gofind.sh"
+exec "$GO_BIN" test ./...

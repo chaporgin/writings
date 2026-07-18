@@ -1,0 +1,6 @@
+# Generated output; rebuild with ./bin/build-writings
+public/
+
+# Local tooling (offline Go toolchain / module cache for sandboxed builds)
+.tools/
+.gomodcache/

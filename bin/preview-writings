@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Build, then serve the complete generated site on 127.0.0.1.
+# Port defaults to 8000; override with PORT=9999 ./bin/preview-writings
+set -euo pipefail
+. "$(dirname "$0")/_gofind.sh"
+exec "$GO_BIN" run . preview "$@"
