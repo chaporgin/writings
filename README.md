@@ -97,8 +97,8 @@ then replaces `public/writings/` (it refuses to touch a `public/writings`
 directory it did not generate). Also copies `site/index.html` to
 `public/index.html`. Output URLs:
 
-- Index: `/writings` → `public/writings/index.html`
-- Article: `/writings/YYYY-MM-DD/slug` → `public/writings/YYYY-MM-DD/slug/index.html`
+- Index: `/writings/` → `public/writings/index.html`
+- Article: `/writings/YYYY-MM-DD/slug/` → `public/writings/YYYY-MM-DD/slug/index.html`
 - Attachment: `/writings/YYYY-MM-DD/slug/files/name.ext`
 
 ## How to test

@@ -80,7 +80,7 @@ func TestValidArticleGeneration(t *testing.T) {
 	for _, want := range []string{
 		"<h1>Why I like plain HTML</h1>",
 		"<p>2026-07-18</p>",
-		`<p><a href="/writings">Writings</a></p>`,
+		`<p><a href="/writings/">Writings</a></p>`,
 		"<strong>bold</strong>",
 		"<h2>A subheading</h2>",
 	} {
@@ -93,7 +93,7 @@ func TestValidArticleGeneration(t *testing.T) {
 	}
 	index := readOut(t, cfg, "writings", "index.html")
 	if !strings.Contains(index,
-		`<li>2026-07-18 - <a href="/writings/2026-07-18/why-i-like-plain-html">Why I like plain HTML</a></li>`) {
+		`<li>2026-07-18 - <a href="/writings/2026-07-18/why-i-like-plain-html/">Why I like plain HTML</a></li>`) {
 		t.Errorf("index entry malformed:\n%s", index)
 	}
 }
@@ -317,11 +317,11 @@ func TestCanonicalURLs(t *testing.T) {
 	writeArticle(t, cfg, "2026-07-18", "note", "# Note\n\nx\n")
 	mustBuild(t, cfg)
 	page := readOut(t, cfg, "writings", "2026-07-18", "note", "index.html")
-	if !strings.Contains(page, `<link rel="canonical" href="https://chaporgin.com/writings/2026-07-18/note">`) {
+	if !strings.Contains(page, `<link rel="canonical" href="https://chaporgin.com/writings/2026-07-18/note/">`) {
 		t.Errorf("article canonical URL wrong:\n%s", page)
 	}
 	index := readOut(t, cfg, "writings", "index.html")
-	if !strings.Contains(index, `<link rel="canonical" href="https://chaporgin.com/writings">`) {
+	if !strings.Contains(index, `<link rel="canonical" href="https://chaporgin.com/writings/">`) {
 		t.Errorf("index canonical URL wrong:\n%s", index)
 	}
 }

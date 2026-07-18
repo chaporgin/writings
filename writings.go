@@ -308,7 +308,7 @@ func parseArticle(md goldmark.Markdown, dir, date, slug string) (*Article, error
 		BodyHTML:    buf.String(),
 		Attachments: attachments,
 		SourceDir:   dir,
-		Route:       "/writings/" + date + "/" + slug,
+		Route:       "/writings/" + date + "/" + slug + "/",
 	}, nil
 }
 
@@ -417,11 +417,11 @@ func renderIndex(articles []*Article) string {
 		items.WriteString("  <li>" + a.Date + " - <a href=\"" + esc(a.Route) + "\">" + esc(a.Title) + "</a></li>\n")
 	}
 	body := "<h1>Writings</h1>\n<ul>\n" + items.String() + "</ul>\n"
-	return pageShell("Writings", "/writings", body)
+	return pageShell("Writings", "/writings/", body)
 }
 
 func renderArticle(a *Article) string {
-	body := "<p><a href=\"/writings\">Writings</a></p>\n" +
+	body := "<p><a href=\"/writings/\">Writings</a></p>\n" +
 		"<article>\n" +
 		"<h1>" + esc(a.Title) + "</h1>\n" +
 		"<p>" + a.Date + "</p>\n" +
