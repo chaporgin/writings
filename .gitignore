@@ -4,3 +4,6 @@ public/
 # Local tooling (offline Go toolchain / module cache for sandboxed builds)
 .tools/
 .gomodcache/
+
+# Editor settings (Obsidian vault config)
+.obsidian/
