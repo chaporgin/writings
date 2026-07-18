@@ -402,6 +402,8 @@ func pageShell(title, canonicalPath, body string) string {
 		"  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
 		"  <title>" + esc(title) + "</title>\n" +
 		"  <link rel=\"canonical\" href=\"" + esc(siteOrigin+canonicalPath) + "\">\n" +
+		"  <link rel=\"icon\" href=\"/favicon.ico\" sizes=\"any\">\n" +
+		"  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">\n" +
 		"</head>\n" +
 		"<body>\n" +
 		body +

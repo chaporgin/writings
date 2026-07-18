@@ -453,6 +453,27 @@ func TestOwnershipProtection(t *testing.T) {
 	mustBuild(t, cfg) // second build must replace its own output without error
 }
 
+func TestFaviconLinkPresent(t *testing.T) {
+	cfg := fixture(t)
+	writeArticle(t, cfg, "2026-07-18", "note", "# Note\n\nx\n")
+	mustBuild(t, cfg)
+	wants := []string{
+		`<link rel="icon" href="/favicon.ico" sizes="any">`,
+		`<link rel="icon" href="/favicon.svg" type="image/svg+xml">`,
+	}
+	for _, p := range [][]string{
+		{"writings", "index.html"},
+		{"writings", "2026-07-18", "note", "index.html"},
+	} {
+		page := readOut(t, cfg, p...)
+		for _, want := range wants {
+			if !strings.Contains(page, want) {
+				t.Errorf("%v: missing favicon link %q", p, want)
+			}
+		}
+	}
+}
+
 func TestRouteUsesDirectoryIndexLayout(t *testing.T) {
 	cfg := fixture(t)
 	writeArticle(t, cfg, "2026-07-18", "note", "# Note\n\nx\n")

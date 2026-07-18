@@ -22,7 +22,9 @@ content/
             ├── index.md             the article (Markdown, UTF-8)
             └── files/               optional attachments (.jpg, .jpeg, .png, .pdf)
 site/
-└── index.html                       landing page, copied verbatim to public/
+├── index.html                       landing page, copied verbatim to public/
+├── favicon.ico                      site icon (32x32), copied verbatim to public/
+└── favicon.svg                      site icon (vector), copied verbatim to public/
 public/                              generated output (do not edit; not tracked)
 bin/                                 the four commands documented below
 ```
