@@ -31,7 +31,7 @@ var (
 	slugRe    = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 	firstH1Re = regexp.MustCompile(`^#[ \t]+\S`)
 
-	allowedExts = map[string]bool{".jpg": true, ".jpeg": true, ".pdf": true}
+	allowedExts = map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".pdf": true}
 )
 
 // Config holds the filesystem roots the generator operates on.
@@ -134,7 +134,7 @@ func validateReference(raw, articleDir, srcPath string) (string, error) {
 		}
 		ext := strings.ToLower(filepath.Ext(name))
 		if !allowedExts[ext] {
-			return bad("attachment type " + ext + " is not allowed; only .jpg, .jpeg and .pdf are supported")
+			return bad("attachment type " + ext + " is not allowed; only .jpg, .jpeg, .png and .pdf are supported")
 		}
 		target := filepath.Join(articleDir, "files", name)
 		fi, err := os.Lstat(target)
@@ -186,7 +186,7 @@ func collectAttachments(articleDir string) ([]string, error) {
 		}
 		ext := strings.ToLower(filepath.Ext(name))
 		if !allowedExts[ext] {
-			return nil, fmt.Errorf("%s: attachment type %q is not supported; only .jpg, .jpeg and .pdf are allowed", p, ext)
+			return nil, fmt.Errorf("%s: attachment type %q is not supported; only .jpg, .jpeg, .png and .pdf are allowed", p, ext)
 		}
 		names = append(names, name)
 	}

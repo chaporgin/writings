@@ -20,7 +20,7 @@ content/
     └── YYYY-MM-DD/                  article publication date
         └── human-friendly-slug/     article slug
             ├── index.md             the article (Markdown, UTF-8)
-            └── files/               optional attachments (.jpg, .jpeg, .pdf)
+            └── files/               optional attachments (.jpg, .jpeg, .png, .pdf)
 site/
 └── index.html                       landing page, copied verbatim to public/
 public/                              generated output (do not edit; not tracked)
@@ -58,7 +58,7 @@ existing article.
 Edit `content/writings/YYYY-MM-DD/slug/index.md` in any text editor (UTF-8),
 then rebuild.
 
-## How to add a JPEG or a PDF
+## How to add an image or a PDF
 
 Copy the file into the article's own `files/` directory, keeping its filename:
 
@@ -67,7 +67,7 @@ cp photo.jpg content/writings/2026-07-18/why-i-like-plain-html/files/
 cp paper.pdf content/writings/2026-07-18/why-i-like-plain-html/files/
 ```
 
-Only `.jpg`, `.jpeg` and `.pdf` files are allowed. Attachments are stored
+Only `.jpg`, `.jpeg`, `.png` and `.pdf` files are allowed. Attachments are stored
 directly in the repository and copied byte-for-byte into the generated site —
 never resized, recompressed or renamed.
 

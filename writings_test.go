@@ -227,22 +227,23 @@ func TestSymlinkAttachmentRejected(t *testing.T) {
 func TestAttachmentsCopiedByteForByte(t *testing.T) {
 	cfg := fixture(t)
 	dir := writeArticle(t, cfg, "2026-07-18", "note",
-		"# Note\n\n![pic](files/photo.jpg)\n\n[doc](files/paper.pdf)\n")
+		"# Note\n\n![pic](files/photo.jpg)\n\n![screen](files/shot.png)\n\n[doc](files/paper.pdf)\n")
 	jpg := []byte{0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46}
+	png := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00}
 	pdf := []byte("%PDF-1.4\n%\xc3\xa4\xc3\xbc\n1 0 obj\nendobj\n")
 	writeAttachment(t, dir, "photo.jpg", jpg)
+	writeAttachment(t, dir, "shot.png", png)
 	writeAttachment(t, dir, "paper.pdf", pdf)
 	mustBuild(t, cfg)
-	gotJpg, err := os.ReadFile(filepath.Join(cfg.OutputRoot, "writings", "2026-07-18", "note", "files", "photo.jpg"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	gotPdf, err := os.ReadFile(filepath.Join(cfg.OutputRoot, "writings", "2026-07-18", "note", "files", "paper.pdf"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(gotJpg) != string(jpg) || string(gotPdf) != string(pdf) {
-		t.Errorf("attachments were not copied byte-for-byte")
+	want := map[string]string{"photo.jpg": string(jpg), "shot.png": string(png), "paper.pdf": string(pdf)}
+	for name, data := range want {
+		got, err := os.ReadFile(filepath.Join(cfg.OutputRoot, "writings", "2026-07-18", "note", "files", name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(got) != data {
+			t.Errorf("%s was not copied byte-for-byte", name)
+		}
 	}
 }
 
