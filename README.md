@@ -4,11 +4,18 @@ Source repository for the writings section of <https://chaporgin.com>, plus the
 site's landing page. Everything is generated into ordinary static HTML files by
 a small Go program (`main.go`, `writings.go`) using the maintained
 [goldmark](https://github.com/yuin/goldmark) Markdown parser with raw HTML
-disabled. There is no database, no CMS, no server-side rendering, no CSS and no
-JavaScript. Git-tracked source files were deliberately selected as the durable
-source of truth for this small static writings system: the Markdown files and
-attachments in this repository are canonical, and all generated HTML can be
-reproduced from them at any time.
+disabled. There is no database, no CMS, no server-side rendering and no
+JavaScript. The only styling is a single inline `<style>` rule that caps
+embedded images at 1000px wide (`img{max-width:1000px;height:auto}`); there is
+no external CSS and no inline `style=` attributes. Git-tracked source files were
+deliberately selected as the durable source of truth for this small static
+writings system: the Markdown files and attachments in this repository are
+canonical, and all generated HTML can be reproduced from them at any time.
+
+Every content paragraph is emitted with a unique, stable id (`p1`, `p2`, ...) in
+document order, so any paragraph can be linked directly as
+`/writings/DATE/slug/#p3`. There is no visible anchor marker; the ids are simply
+present in the HTML.
 
 Requirements: Go 1.21+ (`brew install go` or <https://go.dev/dl/>) and Bash.
 

@@ -341,20 +341,49 @@ func TestNoHTMLSuffixInInternalLinks(t *testing.T) {
 	}
 }
 
-func TestNoCSSOrJavaScript(t *testing.T) {
+func TestNoJavaScriptOrInlineCSS(t *testing.T) {
 	cfg := fixture(t)
 	writeArticle(t, cfg, "2026-07-18", "note", "# Note\n\nSome *text* and `code`.\n")
 	mustBuild(t, cfg)
+	// The only styling allowed is a single <style> block in the head; there is
+	// still no JavaScript, no external stylesheet, and no inline style= attrs.
 	for _, p := range [][]string{
 		{"writings", "index.html"},
 		{"writings", "2026-07-18", "note", "index.html"},
 	} {
 		page := readOut(t, cfg, p...)
-		for _, banned := range []string{"<script", "<style", "stylesheet", "style="} {
+		for _, banned := range []string{"<script", "stylesheet", "style="} {
 			if strings.Contains(page, banned) {
 				t.Errorf("%v: generated page contains %q", p, banned)
 			}
 		}
+	}
+}
+
+func TestImageMaxWidthStyle(t *testing.T) {
+	cfg := fixture(t)
+	writeArticle(t, cfg, "2026-07-18", "note", "# Note\n\nx\n")
+	mustBuild(t, cfg)
+	const want = "<style>img{max-width:1000px;height:auto}</style>"
+	page := readOut(t, cfg, "writings", "2026-07-18", "note", "index.html")
+	if !strings.Contains(page, want) {
+		t.Errorf("article page missing image sizing style %q:\n%s", want, page)
+	}
+}
+
+func TestParagraphAnchorIDs(t *testing.T) {
+	cfg := fixture(t)
+	writeArticle(t, cfg, "2026-07-18", "note",
+		"# Title\n\nFirst paragraph.\n\nSecond paragraph.\n\nThird paragraph.\n")
+	mustBuild(t, cfg)
+	page := readOut(t, cfg, "writings", "2026-07-18", "note", "index.html")
+	for _, want := range []string{`<p id="p1">`, `<p id="p2">`, `<p id="p3">`} {
+		if !strings.Contains(page, want) {
+			t.Errorf("article page missing paragraph anchor %q:\n%s", want, page)
+		}
+	}
+	if strings.Contains(page, `<p id="p4">`) {
+		t.Errorf("unexpected extra paragraph id p4:\n%s", page)
 	}
 }
 

@@ -17,7 +17,9 @@ import (
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
+	"github.com/yuin/goldmark/util"
 )
 
 const (
@@ -54,7 +56,33 @@ type Article struct {
 
 func newMarkdown() goldmark.Markdown {
 	// goldmark defaults: CommonMark, raw HTML disabled (omitted from output).
-	return goldmark.New()
+	// The AST transformer gives every content paragraph a stable, unique id
+	// (p1, p2, ...) so each paragraph is directly linkable via #pN.
+	return goldmark.New(
+		goldmark.WithParserOptions(
+			parser.WithASTTransformers(
+				util.Prioritized(paragraphIDTransformer{}, 100),
+			),
+		),
+	)
+}
+
+// paragraphIDTransformer assigns each paragraph a sequential id in document
+// order. Numbering is deterministic, so identical sources produce identical ids.
+type paragraphIDTransformer struct{}
+
+func (paragraphIDTransformer) Transform(doc *ast.Document, _ text.Reader, _ parser.Context) {
+	n := 0
+	_ = ast.Walk(doc, func(node ast.Node, entering bool) (ast.WalkStatus, error) {
+		if !entering {
+			return ast.WalkContinue, nil
+		}
+		if _, ok := node.(*ast.Paragraph); ok {
+			n++
+			node.SetAttributeString("id", []byte(fmt.Sprintf("p%d", n)))
+		}
+		return ast.WalkContinue, nil
+	})
 }
 
 func isValidDate(s string) bool {
@@ -404,6 +432,7 @@ func pageShell(title, canonicalPath, body string) string {
 		"  <link rel=\"canonical\" href=\"" + esc(siteOrigin+canonicalPath) + "\">\n" +
 		"  <link rel=\"icon\" href=\"/favicon.ico\" sizes=\"any\">\n" +
 		"  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\">\n" +
+		"  <style>img{max-width:1000px;height:auto}</style>\n" +
 		"</head>\n" +
 		"<body>\n" +
 		body +
